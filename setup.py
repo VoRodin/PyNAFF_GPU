@@ -19,7 +19,7 @@ include_dirs = [np.get_include()]
 
 
 setup(
-    name = "PyNAFF",
+    name = "CuPyNAFF",
     version = '1.1.5',
     description = 'A Python module that implements NAFF algorithm',
     long_description = long_description,
