@@ -4,6 +4,11 @@ try:
 except ImportError:
 	from __builtin__ import range, int
 import numpy as np
+import cupy as cp
+import cupyx.scipy.fft as cufft
+import scipy.fft
+scipy.fft.set_global_backend(cufft)
+
 from warnings import warn
 """
 # NAFF - Numerical Analysis of Fundamental Frequencies
@@ -237,10 +242,11 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 	STAREP = FREFON/3.0
 	for term in range(nterms):
 		data_for_fft = np.multiply(vars['ZTABS'], vars['TWIN'])[:-1] # .astype('complex128')
+		cp_data_for_fft=cp.asarray(data_for_fft)
 		if getFullSpectrum:
-			y = np.fft.fft(data_for_fft)
+			y = scipy.fft.fft(cp_data_for_fft)
 		else:
-			y = np.fft.rfft(data_for_fft.astype('float64'))
+			y = scipy.fft.fft(cp_data_for_fft.astype('float64'))
 
 		RTAB = np.sqrt(np.real(y)**2 + np.imag(y)**2)/turns  # normalized
 		INDX = np.argmax(RTAB)
